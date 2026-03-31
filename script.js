@@ -674,7 +674,7 @@ function footerH() {
       <a class="social-link" href="https://pradyumntiwarenexus.medium.com/" target="_blank" rel="noopener">${IC.medium} Medium</a>
       <a class="social-link" href="https://www.linkedin.com/in/pradyumn-tiwarinexus-b270561b1/" target="_blank" rel="noopener">${IC.linkedin} LinkedIn</a>
       <a class="social-link" href="https://x.com/pradyumnTiwari0" target="_blank" rel="noopener">${IC.x} X / Twitter</a>
-      <a class="social-link" href="https://github.com/PradyumnTiwareNexus" target="_blank" rel="noopener">${IC.portfolio} Portfolio</a>
+      <a class="social-link" href="https://pradyumntiwarenexus.github.io/" target="_blank" rel="noopener">${IC.portfolio} Portfolio</a>
     </div>
     <div class="social-copy">© 2026 BrahmastraX · created by pradyumntiwarenexus · Advanced Recon & Dorking Platform</div>
   </div></div>`;
