@@ -390,7 +390,7 @@ const QUOTES = [
   {text:"Recon is 80% of the hack — know your target better than they know themselves.", by:"— The Hacker's Mindset"},
   {text:"The quieter you become, the more you are able to hear.", by:"— Kali Linux motto"},
   {text:"Every system is hackable if you take enough time to understand it.", by:"— Unknown"},
-  {text:"A bug bounty hunter is just a hacker with permission and patience.", by:"— Community Wisdom"},
+  {text:"Recon is 80% of the hack — know your target better than they know themselves.", by:"— The Hacker's Mindset"},
   {text:"Finding a subdomain is easy. Finding the one that matters is the art.", by:"— Recon Philosophy"},
   {text:"Automation finds quantity. Curiosity finds quality.", by:"— Bug Hunter's Creed"},
   {text:"Most critical vulnerabilities aren't in fancy code — they're in forgotten endpoints.", by:"— OWASP Insight"},
