@@ -4,27 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BrahmastraX — Advanced Recon & Dorking Platform</title>
+  <meta name="description" content="BrahmastraX is an advanced bug bounty recon toolkit for subdomain enumeration, endpoint discovery, and Google dorking." />
+  <meta name="author" content="pradyumntiwarenexus" />
+  <meta property="og:title" content="BrahmastraX — Advanced Recon & Dorking Platform" />
+  <meta property="og:description" content="Subdomain Enumeration · Endpoint Recon · Google Dork Intelligence" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#020408" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <canvas id="bg-canvas"></canvas>
+  <div class="grid-overlay"></div>
+  <div class="vignette"></div>
 
-  <!-- NAV -->
   <nav class="topnav" id="topnav">
     <div class="topnav-inner">
       <div class="nav-brand" id="nav-brand">
+        <div class="nav-logo">⚔</div>
         <div>
           <div class="nav-brand-text">Brahmastra</div>
           <div class="nav-brand-sub">created by pradyumntiwarenexus</div>
         </div>
       </div>
       <div class="nav-pills">
-        <button class="nav-pill active" data-tab="subdomain">Subdomain Enum</button>
-        <button class="nav-pill" data-tab="endpoint">Endpoint Recon</button>
-        <button class="nav-pill" data-tab="dork">Google Dork</button>
+        <button class="nav-pill active" data-tab="subdomain">
+          <span class="nav-pill-icon">⬡</span> Subdomain Enum
+        </button>
+        <button class="nav-pill" data-tab="endpoint">
+          <span class="nav-pill-icon">⬡</span> Endpoint Recon
+        </button>
+        <button class="nav-pill" data-tab="dork">
+          <span class="nav-pill-icon">⬡</span> Google Dork
+        </button>
       </div>
       <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -40,11 +56,12 @@
     </div>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <div class="wrapper" id="app"></div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon"></span>
+    <span id="toast-msg"></span>
+  </div>
 
   <script src="script.js"></script>
 </body>
