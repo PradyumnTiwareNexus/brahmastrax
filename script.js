@@ -395,7 +395,7 @@ const QUOTES = [
   {text:"Automation finds quantity. Curiosity finds quality.", by:"— Bug Hunter's Creed"},
   {text:"Most critical vulnerabilities aren't in fancy code — they're in forgotten endpoints.", by:"— OWASP Insight"},
   {text:"One man's forgotten staging server is another man's P1.", by:"— Bug Bounty Folklore"},
-  {text:"Reconnaissance is the phase where patience pays dividends in vulnerabilities.", by:"— Bug Bounty Handbook"},
+  {text:"In bug bounty hunting, reconnaissance is where patience pays off—every small clue can unlock a critical vulnerability"},
 ];
 const QUOTE = QUOTES[Math.floor(Math.random()*QUOTES.length)];
 
