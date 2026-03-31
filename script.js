@@ -387,15 +387,21 @@ const SRC_LABELS = {
 const EP_LABELS = {wayback:"Wayback Machine", commoncrawl:"Common Crawl", otx:"AlienVault OTX", urlscan:"URLScan.io"};
 
 const QUOTES = [
-  {text:"Recon is 80% of the hack — know your target better than they know themselves.", by:"— The Hacker's Mindset"},
-  {text:"The quieter you become, the more you are able to hear.", by:"— Kali Linux motto"},
-  {text:"Every system is hackable if you take enough time to understand it.", by:"— Unknown"},
-  {text:"Recon is 80% of the hack — know your target better than they know themselves.", by:"— The Hacker's Mindset"},
-  {text:"Finding a subdomain is easy. Finding the one that matters is the art.", by:"— Recon Philosophy"},
-  {text:"Automation finds quantity. Curiosity finds quality.", by:"— Bug Hunter's Creed"},
-  {text:"Most critical vulnerabilities aren't in fancy code — they're in forgotten endpoints.", by:"— OWASP Insight"},
-  {text:"One man's forgotten staging server is another man's P1.", by:"— Bug Bounty Folklore"},
-  {text:"In bug bounty hunting, reconnaissance is where patience pays off—every small clue can unlock a critical vulnerability"},
+  {text: "Reconnaissance is 80% of the hack — know your target better than they know themselves.", by: "— The Hacker’s Mindset"},
+
+  {text: "The quieter you become, the more you are able to observe and understand.", by: "— Kali Linux Philosophy"},
+
+  {text: "Every system is hackable — if you invest enough time to truly understand it.", by: "— Unknown"},
+
+  {text: "Finding subdomains is easy. Finding the ones that matter is the real art.", by: "— Recon Philosophy"},
+
+  {text: "Automation finds quantity. Curiosity uncovers quality.", by: "— Bug Hunter’s Creed"},
+
+  {text: "Most critical vulnerabilities aren’t in complex code — they hide in forgotten endpoints.", by: "— OWASP Insight"},
+
+  {text: "One person’s forgotten staging server is another hunter’s P1 vulnerability.", by: "— Bug Bounty Folklore"},
+
+  {text: "In bug bounty hunting, reconnaissance is where patience pays off — every small clue can lead to a critical vulnerability.", by: "— Bug Bounty Handbook Inspired"},
 ];
 const QUOTE = QUOTES[Math.floor(Math.random()*QUOTES.length)];
 
