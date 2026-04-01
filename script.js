@@ -1665,71 +1665,87 @@ function initCanvas() {
   const ctx=c.getContext("2d");
   let W,H,cols,drops,particles;
 
+  const MAX_PARTICLES = 35;
+  const CONNECT_DIST = 100;
+  const CONNECT_DIST_SQ = CONNECT_DIST * CONNECT_DIST;
+
   function resize() {
     W=c.width=innerWidth; H=c.height=innerHeight;
-    cols=Math.floor(W/18);
+    cols=Math.floor(W/22);
     drops=Array(cols).fill(null).map(()=>Math.random()*-50);
     if (!particles) particles=[];
-    while(particles.length<80) particles.push(mkParticle());
-    particles=particles.slice(0,80);
+    while(particles.length<MAX_PARTICLES) particles.push(mkParticle());
+    particles=particles.slice(0,MAX_PARTICLES);
     particles.forEach(p=>{p.x=Math.random()*W;p.y=Math.random()*H;});
   }
 
   function mkParticle() {
     return {
       x:Math.random()*(W||1920), y:Math.random()*(H||1080),
-      vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
-      r:Math.random()*1.8+.4, alpha:Math.random()*.5+.15,
+      vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3,
+      r:Math.random()*2+1,
       col:Math.random()>.6?"139,92,246":"99,179,255",
+      alpha:Math.random()*.4+.15,
     };
   }
 
   resize();
   window.addEventListener("resize",resize);
 
-  const CHARS="01アイウエ0F<>{}∑∆≠ABCDEF01XSS SQL";
+  const CHARS="01<>{}ABCDEF01XSS SQL";
   let frame=0;
+  let lastTime=0;
+  const TARGET_FPS=30;
+  const FRAME_MS=1000/TARGET_FPS;
 
-  function loop() {
+  function loop(ts) {
+    requestAnimationFrame(loop);
+    if (ts-lastTime < FRAME_MS) return;
+    lastTime=ts;
     frame++;
-    ctx.fillStyle="rgba(2,4,8,0.18)";
+
+    ctx.fillStyle="rgba(2,4,8,0.2)";
     ctx.fillRect(0,0,W,H);
 
-    ctx.font="13px 'JetBrains Mono',monospace";
-    for (let i=0;i<cols;i++) {
-      const y=drops[i]*18;
-      ctx.fillStyle="rgba(34,211,160,0.75)";
-      ctx.fillText(CHARS[Math.floor(Math.random()*CHARS.length)],i*18,y);
-      if (drops[i]>2) {
-        ctx.fillStyle="rgba(34,211,160,0.12)";
-        ctx.fillText(CHARS[Math.floor(Math.random()*CHARS.length)],i*18,y-18);
+    if (frame%2===0) {
+      ctx.font="13px monospace";
+      for (let i=0;i<cols;i++) {
+        const y=drops[i]*22;
+        ctx.fillStyle="rgba(34,211,160,0.65)";
+        ctx.fillText(CHARS[Math.floor(Math.random()*CHARS.length)],i*22,y);
+        if (y>H&&Math.random()>.978) drops[i]=-Math.floor(Math.random()*20);
+        drops[i]+=.5;
       }
-      if (y>H&&Math.random()>.975) drops[i]=-Math.floor(Math.random()*20);
-      drops[i]+=.45;
     }
 
     for (const p of particles) {
       p.x+=p.vx; p.y+=p.vy;
       if(p.x<0||p.x>W) p.vx*=-1;
       if(p.y<0||p.y>H) p.vy*=-1;
-      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4);
-      g.addColorStop(0,`rgba(${p.col},${p.alpha})`);
-      g.addColorStop(1,`rgba(${p.col},0)`);
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r*4,0,Math.PI*2);
-      ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.col},${p.alpha})`;
+      ctx.fill();
     }
 
-    for (let i=0;i<particles.length;i++) for(let j=i+1;j<particles.length;j++) {
-      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      if (dist<140) {
-        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
-        ctx.strokeStyle=`rgba(99,179,255,${.07*(1-dist/140)})`; ctx.lineWidth=.6; ctx.stroke();
+    ctx.lineWidth=.5;
+    for (let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const distSq=dx*dx+dy*dy;
+        if (distSq<CONNECT_DIST_SQ) {
+          const alpha=.07*(1-Math.sqrt(distSq)/CONNECT_DIST);
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(99,179,255,${alpha})`;
+          ctx.stroke();
+        }
       }
     }
-    requestAnimationFrame(loop);
   }
-  loop();
+  requestAnimationFrame(loop);
 }
 
 /* ══════════════════════════════════════════════
@@ -1761,41 +1777,41 @@ function initCursor() {
   // Hex characters for trail
   const HEX_CHARS = "0123456789ABCDEF<>{}XSS$?#@!%";
 
+  const MAX_TRAILS = 40;
+  let trailLastTime = 0;
+  const TRAIL_FRAME_MS = 1000 / 30;
+
   function spawnTrail(x, y) {
-    for (let i = 0; i < 2; i++) {
-      trails.push({
-        x: x + (Math.random() - .5) * 8,
-        y: y + (Math.random() - .5) * 8,
-        char: HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)],
-        alpha: Math.random() * 0.6 + 0.4,
-        size: Math.random() * 6 + 8,
-        vy: (Math.random() - .5) * 1.5,
-        vx: (Math.random() - .5) * 1.5,
-        life: 1.0,
-        decay: Math.random() * 0.04 + 0.02,
-        color: Math.random() > 0.5 ? [34, 211, 160] : [99, 179, 255],
-      });
-    }
+    if (trails.length >= MAX_TRAILS) return;
+    trails.push({
+      x: x + (Math.random() - .5) * 6,
+      y: y + (Math.random() - .5) * 6,
+      char: HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)],
+      size: Math.random() * 5 + 7,
+      vy: (Math.random() - .5) * 1.2,
+      vx: (Math.random() - .5) * 1.2,
+      life: 1.0,
+      decay: Math.random() * 0.06 + 0.03,
+      color: Math.random() > 0.5 ? "34,211,160" : "99,179,255",
+    });
   }
 
-  function drawTrails() {
+  function drawTrails(ts) {
+    requestAnimationFrame(drawTrails);
+    if (ts - trailLastTime < TRAIL_FRAME_MS) return;
+    trailLastTime = ts;
     ctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+    ctx.font = "11px monospace";
     for (let i = trails.length - 1; i >= 0; i--) {
       const t = trails[i];
       t.x += t.vx; t.y += t.vy;
       t.life -= t.decay;
-      t.alpha = t.life * 0.7;
       if (t.life <= 0) { trails.splice(i, 1); continue; }
-      ctx.font = `${t.size}px 'JetBrains Mono', monospace`;
-      ctx.fillStyle = `rgba(${t.color[0]},${t.color[1]},${t.color[2]},${t.alpha})`;
-      ctx.shadowColor = `rgba(${t.color[0]},${t.color[1]},${t.color[2]},0.5)`;
-      ctx.shadowBlur = 8;
+      ctx.fillStyle = `rgba(${t.color},${t.life * 0.6})`;
       ctx.fillText(t.char, t.x, t.y);
     }
-    ctx.shadowBlur = 0;
-    requestAnimationFrame(drawTrails);
   }
-  drawTrails();
+  requestAnimationFrame(drawTrails);
 
   document.addEventListener("mousemove", e => {
     mx = e.clientX; my = e.clientY;
@@ -1807,7 +1823,7 @@ function initCursor() {
 
     // Spawn trail if moved enough
     const dx = mx - lastMx, dy = my - lastMy;
-    if (Math.sqrt(dx*dx + dy*dy) > 6) {
+    if (dx*dx + dy*dy > 100) {
       spawnTrail(mx, my);
       lastMx = mx; lastMy = my;
     }
@@ -1831,7 +1847,7 @@ function initCursor() {
 
   // Click effect
   document.addEventListener("click", e => {
-    for (let i = 0; i < 8; i++) spawnTrail(e.clientX, e.clientY);
+    for (let i = 0; i < 3; i++) spawnTrail(e.clientX, e.clientY);
     ring.style.width = "45px"; ring.style.height = "45px";
     ring.style.borderColor = "rgba(34,211,160,0.8)";
     setTimeout(() => {
@@ -2559,4 +2575,13 @@ document.addEventListener("DOMContentLoaded",()=>{
   initCanvas();
   initCursor();
   render();
+});
+
+// Pause animations when tab is hidden to save CPU
+document.addEventListener("visibilitychange",()=>{
+  if (document.hidden) {
+    document.getElementById("bg-canvas")?.style && (document.getElementById("bg-canvas").style.display="none");
+  } else {
+    document.getElementById("bg-canvas")?.style && (document.getElementById("bg-canvas").style.display="");
+  }
 });

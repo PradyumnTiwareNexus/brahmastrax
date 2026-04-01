@@ -49,6 +49,7 @@ body {
   transform: translate(-50%, -50%);
   transition: width .15s, height .15s, background .15s;
   left: -100px; top: -100px;
+  will-change: left, top;
 }
 #cursor-ring {
   position: fixed; pointer-events: none; z-index: 99998;
@@ -57,6 +58,7 @@ body {
   transform: translate(-50%, -50%);
   transition: left .08s ease, top .08s ease, width .2s, height .2s, border-color .2s;
   left: -100px; top: -100px;
+  will-change: left, top;
 }
 #cursor-idle-ring {
   position: fixed; pointer-events: none; z-index: 99997;
@@ -77,6 +79,7 @@ body {
 }
 #cursor-trail-canvas {
   position: fixed; inset: 0; pointer-events: none; z-index: 99996;
+  will-change: contents;
 }
 body:hover #cursor-dot { opacity: 1; }
 a, button, input, label, [role="button"] { cursor: none; }
@@ -84,6 +87,7 @@ a, button, input, label, [role="button"] { cursor: none; }
 /* ── CANVAS ── */
 #bg-canvas {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  will-change: contents;
 }
 
 /* ── HEX GRID OVERLAY ── */
