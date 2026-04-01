@@ -37,52 +37,14 @@ body {
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  cursor: none;
+  cursor: auto;
 }
 
-/* ── CUSTOM CURSOR ── */
-#cursor-dot {
-  position: fixed; pointer-events: none; z-index: 99999;
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 10px var(--green), 0 0 20px rgba(34,211,160,0.5);
-  transform: translate(-50%, -50%);
-  transition: width .15s, height .15s, background .15s;
-  left: -100px; top: -100px;
-  will-change: left, top;
+/* ── CUSTOM CURSOR (disabled) ── */
+#cursor-dot, #cursor-ring, #cursor-idle-ring, #cursor-trail-canvas {
+  display: none;
 }
-#cursor-ring {
-  position: fixed; pointer-events: none; z-index: 99998;
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 1px solid rgba(99,179,255,0.5);
-  transform: translate(-50%, -50%);
-  transition: left .08s ease, top .08s ease, width .2s, height .2s, border-color .2s;
-  left: -100px; top: -100px;
-  will-change: left, top;
-}
-#cursor-idle-ring {
-  position: fixed; pointer-events: none; z-index: 99997;
-  width: 60px; height: 60px; border-radius: 50%;
-  border: 1px solid rgba(34,211,160,0);
-  transform: translate(-50%, -50%);
-  left: -100px; top: -100px;
-}
-#cursor-idle-ring.scanning {
-  animation: scanPulse 2s ease-in-out infinite;
-  border-color: rgba(34,211,160,0.4);
-  box-shadow: 0 0 20px rgba(34,211,160,0.15), inset 0 0 20px rgba(34,211,160,0.05);
-}
-@keyframes scanPulse {
-  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.8; border-color: rgba(34,211,160,0.4); }
-  50%  { transform: translate(-50%,-50%) scale(1.4); opacity: 0.3; border-color: rgba(99,179,255,0.4); }
-  100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.8; border-color: rgba(34,211,160,0.4); }
-}
-#cursor-trail-canvas {
-  position: fixed; inset: 0; pointer-events: none; z-index: 99996;
-  will-change: contents;
-}
-body:hover #cursor-dot { opacity: 1; }
-a, button, input, label, [role="button"] { cursor: none; }
+a, button, [role="button"] { cursor: pointer; }
 
 /* ── CANVAS ── */
 #bg-canvas {

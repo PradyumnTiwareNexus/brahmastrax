@@ -1601,18 +1601,15 @@ function aiGetFallback(msg) {
   if (greetings.some(g=>m.startsWith(g)||m===g)) {
     return `<div class="ai-info-block">
       <strong>Hello, Hacker!</strong> 👋<br><br>
-      I'm your <strong>AI Security Assistant</strong>. I can help you with:<br><br>
-      <strong>▸ XSS Payloads</strong> — Reflected, Stored, DOM, CSP bypass<br>
-      <strong>▸ SSTI Payloads</strong> — Jinja2, Twig, Freemarker, ERB<br>
-      <strong>▸ SQL Injection</strong> — Error-based, UNION, Blind, Time-based<br>
-      <strong>▸ SSRF Payloads</strong> — Cloud metadata, Protocol smuggling<br>
-      <strong>▸ LFI / RFI</strong> — File inclusion, PHP wrappers<br>
-      <strong>▸ RCE</strong> — Command injection, Reverse shells<br>
-      <strong>▸ XXE</strong> — XML External Entity attacks<br>
-      <strong>▸ IDOR</strong> — Insecure Direct Object Reference<br>
-      <strong>▸ Tools</strong> — Bug bounty tool recommendations<br>
-      <strong>▸ Wordlists</strong> — Fuzzing resources<br><br>
-      Just ask me! Example: <em>"Give me XSS payloads"</em>
+      I'm your <strong>AI Security Assistant</strong> — now powered by <span style="color:var(--cyan)">live web search</span>.<br><br>
+      Type <strong>anything</strong> and I'll search the internet for real-time results:<br><br>
+      <strong>▸</strong> <em>"XSS payloads 2024"</em><br>
+      <strong>▸</strong> <em>"SQLi bypass WAF techniques"</em><br>
+      <strong>▸</strong> <em>"SSRF cloud metadata endpoints"</em><br>
+      <strong>▸</strong> <em>"nmap cheatsheet"</em><br>
+      <strong>▸</strong> <em>"bug bounty tips hackerone"</em><br>
+      <strong>▸</strong> <em>"RCE via SSTI jinja2"</em><br><br>
+      <span style="color:var(--muted);font-size:11px">Results fetched live from the web with links you can open directly.</span>
     </div>`;
   }
   if (m.includes("help") || m.includes("what can") || m.includes("what do you")) {
@@ -2032,7 +2029,7 @@ function aiMessagesH() {
         <div class="ai-msg-bubble">${escHtml(msg.text)}</div>
       </div>`;
     }
-  }).join("") + (S.aiTyping ? `<div class="ai-msg bot"><div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div></div>` : "");
+  }).join("") + (S.aiTyping ? `<div class="ai-msg bot"><div class="ai-msg-avatar">🤖</div><div class="ai-msg-bubble"><div style="display:flex;align-items:center;gap:8px"><div class="ai-typing"><span></span><span></span><span></span></div><span style="font-size:11px;color:var(--muted);font-family:var(--mono)">Searching the web...</span></div></div></div>` : "");
 }
 
 function footerH() {
@@ -2277,6 +2274,78 @@ function exportTxt(content,filename) {
   a.download=filename; a.click(); URL.revokeObjectURL(a.href);
 }
 
+/* ── AI WEB SEARCH ── */
+async function aiSearchWeb(query) {
+  try {
+    const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
+    const r = await fetch(url, {signal: AbortSignal.timeout(9000)});
+    return await r.json();
+  } catch { return null; }
+}
+
+function formatWebResults(data, query) {
+  if (!data) return aiSearchFallback(query);
+  let html = "";
+  let hasContent = false;
+
+  if (data.Answer) {
+    hasContent = true;
+    html += `<div class="ai-section-title">Direct Answer</div>
+      <div class="ai-info-block" style="color:var(--green);font-size:13px;padding:10px 14px">${data.Answer}</div>`;
+  }
+
+  if (data.AbstractText) {
+    hasContent = true;
+    const src = data.AbstractURL ? `<br><a href="${data.AbstractURL}" target="_blank" style="color:var(--cyan);font-size:10px;font-family:var(--mono)">→ ${data.AbstractSource || "Source"}</a>` : "";
+    html += `<div class="ai-section-title">${data.Heading || "Summary"}</div>
+      <div class="ai-info-block" style="font-size:12px;line-height:1.6">${data.AbstractText}${src}</div>`;
+  }
+
+  const topics = (data.RelatedTopics || [])
+    .filter(t => t.Text && t.FirstURL && !t.Topics)
+    .slice(0, 6);
+
+  if (topics.length) {
+    hasContent = true;
+    html += `<div class="ai-section-title">Results</div>`;
+    topics.forEach(t => {
+      html += `<div class="ai-payload-item" style="cursor:default;flex-direction:column;align-items:flex-start;gap:4px">
+        <div style="color:var(--text);font-size:12px;line-height:1.5">${t.Text}</div>
+        <a href="${t.FirstURL}" target="_blank" style="color:var(--cyan);font-size:10px;font-family:var(--mono);word-break:break-all">→ ${t.FirstURL}</a>
+      </div>`;
+    });
+  }
+
+  const directResults = (data.Results || []).slice(0, 3);
+  if (directResults.length) {
+    hasContent = true;
+    html += `<div class="ai-section-title">Top Links</div>`;
+    directResults.forEach(r => {
+      html += `<div class="ai-payload-item" style="cursor:default;flex-direction:column;align-items:flex-start;gap:4px">
+        <a href="${r.FirstURL}" target="_blank" style="color:var(--green);font-size:12px">${r.Text}</a>
+        <span style="color:var(--muted);font-size:10px;font-family:var(--mono)">${r.FirstURL}</span>
+      </div>`;
+    });
+  }
+
+  if (!hasContent) return aiSearchFallback(query);
+
+  html += `<div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(99,179,255,0.12);display:flex;gap:14px;flex-wrap:wrap">
+    <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--cyan);font-size:11px;font-family:var(--mono)">→ Google</a>
+    <a href="https://duckduckgo.com/?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--muted);font-size:11px;font-family:var(--mono)">→ DuckDuckGo</a>
+  </div>`;
+  return html;
+}
+
+function aiSearchFallback(query) {
+  return `<div class="ai-info-block" style="font-size:12px">
+    No direct results found. Search the web:
+    <br><br>
+    <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--cyan);font-family:var(--mono)">→ Google: "${query}"</a><br>
+    <a href="https://duckduckgo.com/?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--muted);font-family:var(--mono)">→ DuckDuckGo: "${query}"</a>
+  </div>`;
+}
+
 /* ── AI SEND MESSAGE ── */
 async function aiSend(text) {
   if (!text.trim() || S.aiTyping) return;
@@ -2285,15 +2354,16 @@ async function aiSend(text) {
   S.aiTyping = true;
   render();
 
-  // Simulate thinking delay
-  await new Promise(r=>setTimeout(r, 700 + Math.random()*600));
-
-  const kb = aiGetResponse(text);
+  // Try web search first
+  const webData = await aiSearchWeb(text);
   let responseHtml;
-  if (kb) {
-    responseHtml = aiFormatResponse(kb);
+
+  if (webData && (webData.AbstractText || webData.Answer || (webData.RelatedTopics||[]).length || (webData.Results||[]).length)) {
+    responseHtml = formatWebResults(webData, text);
   } else {
-    responseHtml = aiGetFallback(text);
+    // Fallback: check local security KB
+    const kb = aiGetResponse(text);
+    responseHtml = kb ? aiFormatResponse(kb) : aiSearchFallback(text);
   }
 
   S.aiMessages.push({role:"bot",html:responseHtml});
@@ -2573,7 +2643,6 @@ async function startEp() {
 /* ── BOOT ── */
 document.addEventListener("DOMContentLoaded",()=>{
   initCanvas();
-  initCursor();
   render();
 });
 
