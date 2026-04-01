@@ -87,14 +87,17 @@ async function fetchCrtSh(d,ms=40000) {
   }
   return out;
 }
-async function fetchJLDC(d,ms=13000) {
+async function fetchJLDC(d,ms=15000) {
   try {
-    const r=await proxyFetch(`https://dns.bufferover.run/dns?q=.${d}`,ms);
-    const data=await r.json(); const seen=new Set(); const out=[];
-    for (const rec of [...(data.FDNS_A||[]),...(data.RDNS||[])]) {
-      const parts=rec.split(","); const s=(parts[1]||parts[0]||"").toLowerCase().trim();
-      const ip=parts.length>1?parts[0].trim():"";
-      if (s&&isValidSub(s,d)&&!seen.has(s)) { seen.add(s); out.push({subdomain:s,ip,source:"jldc"}); }
+    let data=null;
+    const url=`https://jldc.me/anubis/subdomains/${d}`;
+    try { const r=await fetch(url,{signal:AbortSignal.timeout(13000)}); if(r.ok) data=await r.json(); } catch{}
+    if(!data) { try { const r=await proxyFetch(url,ms); data=await r.json(); } catch{ return []; } }
+    if(!Array.isArray(data)) return [];
+    const seen=new Set(); const out=[];
+    for (const s of data) {
+      const sub=(s||"").toLowerCase().trim();
+      if(sub&&isValidSub(sub,d)&&!seen.has(sub)) { seen.add(sub); out.push({subdomain:sub,ip:"",source:"jldc"}); }
     }
     return out;
   } catch { return []; }
