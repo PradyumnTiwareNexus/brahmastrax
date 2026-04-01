@@ -3,76 +3,258 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BrahmastraX — Advanced Recon, Dorking & AI Security Assistant</title>
-  <meta name="description" content="BrahmastraX is an advanced bug bounty recon toolkit for subdomain enumeration, endpoint discovery, Google dorking, and AI-powered payload generation." />
-  <meta name="author" content="pradyumntiwarenexus" />
-  <meta property="og:title" content="BrahmastraX — Advanced Recon & Dorking Platform" />
-  <meta property="og:description" content="Subdomain Enumeration · Endpoint Recon · Google Dork Intelligence · AI Security Assistant" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#020408" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <title>BrahmastraX — Cyber Recon Toolkit</title>
+  <meta name="description" content="Professional cybersecurity recon tool for bug bounty hunters. Subdomain enumeration, endpoint recon, Google dorks, AI security assistant." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔</text></svg>" />
 </head>
 <body>
-  <!-- Custom cursor elements -->
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
-  <div id="cursor-idle-ring"></div>
-  <canvas id="cursor-trail-canvas"></canvas>
 
-  <canvas id="bg-canvas"></canvas>
-  <div class="grid-overlay"></div>
-  <div class="vignette"></div>
+<!-- Matrix Background -->
+<canvas id="matrix-canvas"></canvas>
+<div id="radial-overlay"></div>
+<div id="scanline-overlay"></div>
 
-  <nav class="topnav" id="topnav">
-    <div class="topnav-inner">
-      <div class="nav-brand" id="nav-brand">
-        <div class="nav-logo">⚔</div>
-        <div>
-          <div class="nav-brand-text">BrahmastraX</div>
-          <div class="nav-brand-sub">created by pradyumntiwarenexus</div>
-        </div>
-      </div>
-      <div class="nav-pills">
-        <button class="nav-pill active" data-tab="subdomain">
-          <span class="nav-pill-icon">⬡</span> Subdomain Enum
-        </button>
-        <button class="nav-pill" data-tab="endpoint">
-          <span class="nav-pill-icon">⬡</span> Endpoint Recon
-        </button>
-        <button class="nav-pill" data-tab="dork">
-          <span class="nav-pill-icon">⬡</span> Google Dork
-        </button>
-        <button class="nav-pill" data-tab="ai">
-          <span class="nav-pill-icon">⬡</span> AI Assistant
-        </button>
-      </div>
-      <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-    <div class="mobile-drawer" id="mobile-drawer">
-      <div class="drawer-section">
-        <div class="drawer-section-label">Navigation</div>
-        <button class="drawer-nav-item active" data-tab="subdomain"><span class="drawer-icon">🔍</span>Subdomain Enum</button>
-        <button class="drawer-nav-item" data-tab="endpoint"><span class="drawer-icon">🌐</span>Endpoint Recon</button>
-        <button class="drawer-nav-item" data-tab="dork"><span class="drawer-icon">🔎</span>Google Dork</button>
-        <button class="drawer-nav-item" data-tab="ai"><span class="drawer-icon">🤖</span>AI Assistant</button>
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-icon">⚔</div>
+      <div>
+        <div class="logo-title">BrahmastraX</div>
+        <div class="logo-sub">created by pradyumntiwarenexus</div>
       </div>
     </div>
-  </nav>
 
-  <div class="wrapper" id="app"></div>
+    <!-- Desktop Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="subdomain"><span class="hex">⬡</span>Subdomain Enum</button>
+      <button class="tab-btn" data-tab="dork"><span class="hex">⬡</span>Google Dork</button>
+      <button class="tab-btn" data-tab="endpoint"><span class="hex">⬡</span>Endpoint Recon</button>
+      <button class="tab-btn ai-tab" data-tab="ai"><span class="hex">⬡</span>AI Assistant</button>
+    </div>
 
-  <div class="toast" id="toast">
-    <span class="toast-icon" id="toast-icon"></span>
-    <span id="toast-msg"></span>
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn" class="mobile-menu-btn" style="display:none">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <button class="mobile-tab-btn active" data-tab="subdomain">🔍 Subdomain Enum</button>
+    <button class="mobile-tab-btn" data-tab="dork">🔎 Google Dork</button>
+    <button class="mobile-tab-btn" data-tab="endpoint">🌐 Endpoint Recon</button>
+    <button class="mobile-tab-btn ai-tab" data-tab="ai">🤖 AI Assistant</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- ══════════ SUBDOMAIN TAB ══════════ -->
+  <div id="tab-subdomain" class="tab-panel active">
+    <div class="section-header">
+      <h2 class="section-title">SUBDOMAIN ENUM<span class="cursor">_</span></h2>
+      <div class="quote-card">
+        <p>Finding subdomains is easy. Finding the ones that matter is the real art.</p>
+        <div class="quote-meta">RECON PHILOSOPHY</div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="input-row">
+        <div class="input-wrap">
+          <span class="input-icon">🔍</span>
+          <input type="text" id="sub-domain-input" placeholder="example.com" autocomplete="off" />
+        </div>
+        <button class="btn" id="sub-scan-btn">LAUNCH SCAN</button>
+      </div>
+      <div class="source-toggles" id="sub-sources"></div>
+    </div>
+
+    <!-- Stats -->
+    <div id="sub-stats-grid" class="stats-grid" style="display:none">
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">#</span> Subdomains</div>
+        <div class="stat-val" id="stat-subs">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">#</span> Resolved</div>
+        <div class="stat-val" id="stat-resolved">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">#</span> Unique IPs</div>
+        <div class="stat-val" id="stat-ips">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">#</span> Sources Hit</div>
+        <div class="stat-val" id="stat-sources">0/0</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div id="sub-progress-wrap" class="progress-bar-wrap" style="display:none">
+      <div class="progress-header">
+        <div class="progress-label"><span class="dollar">$</span> SCANNING IN PROGRESS</div>
+        <div class="progress-pct" id="sub-progress-pct">0%</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="sub-progress-fill" style="width:0%"></div></div>
+      <div class="scan-sources" id="sub-scan-sources"></div>
+    </div>
+
+    <!-- Results -->
+    <div id="sub-results-area" style="display:none">
+      <div class="results-header">
+        <div class="results-label"><span class="tilde">~/</span> RESULTS</div>
+        <div class="btn-row">
+          <input type="text" class="filter-input" id="sub-filter" placeholder="Filter results..." />
+          <button class="btn btn-sm btn-outline" id="sub-copy">📋 COPY</button>
+          <button class="btn btn-sm btn-outline" id="sub-export">⬇ EXPORT</button>
+        </div>
+      </div>
+      <div class="result-table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Subdomain</th><th>IP Address</th><th>Source</th></tr></thead>
+          <tbody><tr><td colspan="4" class="empty-row">Awaiting results...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ GOOGLE DORK TAB ══════════ -->
+  <div id="tab-dork" class="tab-panel">
+    <div class="section-header">
+      <h2 class="section-title">GOOGLE DORK INTELLIGENCE<span class="cursor">_</span></h2>
+      <div class="quote-card">
+        <p>Uncover exposed files, admin panels, vulnerable endpoints, and credentials indexed by search engines.</p>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="input-row">
+        <div class="input-wrap">
+          <span class="input-icon">🔎</span>
+          <input type="text" id="dork-domain-input" placeholder="example.com" autocomplete="off" />
+        </div>
+        <button class="btn" id="dork-gen-btn">GENERATE DORKS</button>
+      </div>
+    </div>
+
+    <div id="dork-grid" class="dork-grid" style="display:none"></div>
+  </div>
+
+  <!-- ══════════ ENDPOINT TAB ══════════ -->
+  <div id="tab-endpoint" class="tab-panel">
+    <div class="section-header">
+      <h2 class="section-title">ENDPOINT RECON<span class="cursor">_</span></h2>
+      <div class="quote-card">
+        <p>Discover historical endpoints, URLs and paths from passive web archives — no active scanning, no noise.</p>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="input-row">
+        <div class="input-wrap">
+          <span class="input-icon">🔍</span>
+          <input type="text" id="ep-domain-input" placeholder="example.com" autocomplete="off" />
+        </div>
+        <button class="btn" id="ep-scan-btn">LAUNCH SCAN</button>
+      </div>
+      <div class="source-toggles" id="ep-sources"></div>
+    </div>
+
+    <!-- Stats -->
+    <div id="ep-stats-grid" class="stats-grid" style="display:none;grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">#</span> Endpoints Found</div>
+        <div class="stat-val" id="stat-eps">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">#</span> Sources Hit</div>
+        <div class="stat-val" id="stat-src-hit">0/0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="hash">@</span> Target</div>
+        <div class="stat-val" id="stat-target" style="font-size:1rem;color:#e2e8f0;-webkit-text-fill-color:#e2e8f0;margin-top:8px">N/A</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div id="ep-progress-wrap" class="progress-bar-wrap" style="display:none">
+      <div class="progress-header">
+        <div class="progress-label"><span class="dollar">$</span> SCANNING IN PROGRESS</div>
+        <div class="progress-pct" id="ep-progress-pct">0%</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="ep-progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Results -->
+    <div id="ep-results-area" style="display:none">
+      <div class="results-header">
+        <div class="results-label"><span class="tilde">~/</span> RESULTS</div>
+        <div class="btn-row">
+          <input type="text" class="filter-input" id="ep-filter" placeholder="Filter results..." />
+          <button class="btn btn-sm btn-outline" id="ep-copy">📋 COPY</button>
+          <button class="btn btn-sm btn-outline" id="ep-copy-paths">📋 API PATHS</button>
+          <button class="btn btn-sm btn-outline" id="ep-export">⬇ EXPORT</button>
+        </div>
+      </div>
+      <div class="result-table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>URL</th><th>Status</th><th>Source</th></tr></thead>
+          <tbody><tr><td colspan="4" class="empty-row">Awaiting results...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ AI ASSISTANT TAB ══════════ -->
+  <div id="tab-ai" class="tab-panel">
+    <div class="ai-container">
+      <div class="ai-header">
+        <h2 class="ai-title">AI SECURITY ASSISTANT<span class="cursor" style="-webkit-text-fill-color:#a855f7;color:#a855f7">_</span></h2>
+        <p class="ai-sub">Cybersecurity AI specializing in bug bounty, penetration testing, OSINT, and vulnerability research.</p>
+      </div>
+
+      <div class="ai-chat-wrap">
+        <div class="ai-terminal-bar">
+          <div class="ai-term-label">🖥 brahmastrax-ai-core</div>
+          <button class="btn-new-session" id="ai-new-session">NEW SESSION</button>
+        </div>
+
+        <div class="ai-messages" id="ai-messages">
+          <div class="ai-empty" id="ai-empty-state">
+            <div class="ai-empty-icon">🤖</div>
+            <p>System initialized. Awaiting queries.</p>
+          </div>
+        </div>
+
+        <!-- AI Notice (shown when no backend) -->
+        <div class="ai-notice" id="ai-notice" style="display:none">
+          <strong>⚡ AI Assistant requires a backend</strong><br/>
+          This standalone version does not include the AI backend.<br/>
+          To enable AI: Deploy BrahmastraX on <strong>Replit</strong> and set <code>AI_BACKEND_URL</code> in <code>script.js</code>.<br/><br/>
+          All other features (Subdomain Enum, Google Dorks, Endpoint Recon) work fully offline.
+        </div>
+
+        <div class="ai-input-row">
+          <div class="ai-input-inner">
+            <span class="ai-prompt">&gt;</span>
+            <input type="text" class="ai-input" id="ai-input" placeholder="Ask about vulnerabilities, payloads, or recon tactics..." autocomplete="off" />
+            <button class="btn btn-send" id="ai-send-btn">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast notification -->
+<div class="copied-toast" id="copied-toast">Copied!</div>
+
+<script src="script.js"></script>
 </body>
 </html>
