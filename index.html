@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BrahmastraX — Advanced Recon & Dorking Platform</title>
-  <meta name="description" content="BrahmastraX is an advanced bug bounty recon toolkit for subdomain enumeration, endpoint discovery, and Google dorking." />
+  <title>BrahmastraX — Advanced Recon, Dorking & AI Security Assistant</title>
+  <meta name="description" content="BrahmastraX is an advanced bug bounty recon toolkit for subdomain enumeration, endpoint discovery, Google dorking, and AI-powered payload generation." />
   <meta name="author" content="pradyumntiwarenexus" />
   <meta property="og:title" content="BrahmastraX — Advanced Recon & Dorking Platform" />
-  <meta property="og:description" content="Subdomain Enumeration · Endpoint Recon · Google Dork Intelligence" />
+  <meta property="og:description" content="Subdomain Enumeration · Endpoint Recon · Google Dork Intelligence · AI Security Assistant" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#020408" />
@@ -18,6 +18,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Custom cursor elements -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+  <div id="cursor-idle-ring"></div>
+  <canvas id="cursor-trail-canvas"></canvas>
+
   <canvas id="bg-canvas"></canvas>
   <div class="grid-overlay"></div>
   <div class="vignette"></div>
@@ -27,7 +33,7 @@
       <div class="nav-brand" id="nav-brand">
         <div class="nav-logo">⚔</div>
         <div>
-          <div class="nav-brand-text">Brahmastra</div>
+          <div class="nav-brand-text">BrahmastraX</div>
           <div class="nav-brand-sub">created by pradyumntiwarenexus</div>
         </div>
       </div>
@@ -41,6 +47,9 @@
         <button class="nav-pill" data-tab="dork">
           <span class="nav-pill-icon">⬡</span> Google Dork
         </button>
+        <button class="nav-pill" data-tab="ai">
+          <span class="nav-pill-icon">⬡</span> AI Assistant
+        </button>
       </div>
       <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -52,6 +61,7 @@
         <button class="drawer-nav-item active" data-tab="subdomain"><span class="drawer-icon">🔍</span>Subdomain Enum</button>
         <button class="drawer-nav-item" data-tab="endpoint"><span class="drawer-icon">🌐</span>Endpoint Recon</button>
         <button class="drawer-nav-item" data-tab="dork"><span class="drawer-icon">🔎</span>Google Dork</button>
+        <button class="drawer-nav-item" data-tab="ai"><span class="drawer-icon">🤖</span>AI Assistant</button>
       </div>
     </div>
   </nav>
